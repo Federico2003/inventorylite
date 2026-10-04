@@ -2,7 +2,18 @@
   "extends": "./tsconfig.app.json",
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.test.tsbuildinfo",
-    "types": ["vite/client", "vitest/globals", "@testing-library/jest-dom", "./worker-configuration.d.ts"]
+    "types": [
+      "vite/client",
+      "vitest/globals",
+      "@testing-library/jest-dom",
+      "./worker-configuration.d.ts",
+      "node"
+    ]
   },
-  "include": ["tests", "vitest.config.ts"]
+  "include": [
+    "tests",
+    "uat",
+    "vitest.config.ts",
+    "vitest.uat.config.ts"
+  ]
 }

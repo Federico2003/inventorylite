@@ -51,6 +51,17 @@ async function createProduct(request: Request, env: Env) {
   return Response.json(product, { status: 201 });
 }
 
+async function deleteProduct(id: number, env: Env) {
+  const result = await env.DB.prepare("DELETE FROM products WHERE id = ?")
+    .bind(id)
+    .run();
+
+  if (!result.meta.changes) {
+    return Response.json({ error: "Producto no encontrado" }, { status: 404 });
+  }
+  return new Response(null, { status: 204 });
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -59,6 +70,19 @@ export default {
       try {
         if (request.method === "GET") return await listProducts(env);
         if (request.method === "POST") return await createProduct(request, env);
+        return Response.json({ error: "Método no permitido" }, { status: 405 });
+      } catch (error) {
+        console.error(error);
+        return Response.json({ error: "Error del servidor" }, { status: 500 });
+      }
+    }
+
+    const match = url.pathname.match(/^\/api\/products\/(\d+)$/);
+    if (match) {
+      try {
+        if (request.method === "DELETE") {
+          return await deleteProduct(Number(match[1]), env);
+        }
         return Response.json({ error: "Método no permitido" }, { status: 405 });
       } catch (error) {
         console.error(error);

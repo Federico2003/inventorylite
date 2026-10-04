@@ -9,6 +9,11 @@ function createEnv(rows: Row[] = []) {
     prepare: vi.fn((sql: string) => ({
       all: async () => ({ results: rows }),
       bind: (...args: unknown[]) => ({
+        run: async () => {
+          const index = rows.findIndex((row) => row.id === args[0]);
+          if (index >= 0) rows.splice(index, 1);
+          return { meta: { changes: index >= 0 ? 1 : 0 } };
+        },
         first: async () => {
           if (sql.includes("fail")) throw new Error("db");
           const [name, description, stock, created_at] = args as [string, string, number, string];
@@ -104,5 +109,33 @@ describe("API /api/products", () => {
   it("rutas desconocidas regresan 404", async () => {
     expect((await call(createEnv(), "/api/otra")).status).toBe(404);
     expect((await call(createEnv(), "/otra")).status).toBe(404);
+  });
+
+  it("DELETE elimina un producto existente y regresa 204", async () => {
+    const rows = [
+      { id: 7, name: "Mouse", description: "", stock: 5, created_at: "2026-10-04" },
+    ];
+    const res = await call(createEnv(rows), "/api/products/7", { method: "DELETE" });
+    expect(res.status).toBe(204);
+    expect(rows).toHaveLength(0);
+  });
+
+  it("DELETE de un producto inexistente regresa 404", async () => {
+    const res = await call(createEnv(), "/api/products/99", { method: "DELETE" });
+    expect(res.status).toBe(404);
+  });
+
+  it("otros métodos sobre /api/products/:id regresan 405", async () => {
+    const res = await call(createEnv(), "/api/products/1", { method: "PUT" });
+    expect(res.status).toBe(405);
+  });
+
+  it("DELETE regresa 500 si falla la base de datos", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    const env = {
+      DB: { prepare: () => ({ bind: () => ({ run: async () => { throw new Error("db"); } }) }) },
+    } as unknown as Env;
+    const res = await call(env, "/api/products/1", { method: "DELETE" });
+    expect(res.status).toBe(500);
   });
 });

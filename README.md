@@ -11,8 +11,9 @@ src/                 Frontend React
 worker/index.ts      API (GET / POST /api/products) sobre D1
 schema.sql           Tabla products
 seed.sql             Datos de ejemplo
-tests/               Tests de componentes y de la API
-.github/workflows/   Pipeline build-test -> deploy-production
+tests/               Tests unitarios de componentes y de la API
+uat/                 Pruebas de aceptación contra la app desplegada
+.github/workflows/   Pipeline build-test -> deploy-dev -> uat -> deploy-production
 ```
 
 ## Ambientes
@@ -29,7 +30,8 @@ tests/               Tests de componentes y de la API
 | `npm run dev` | App local con D1 local |
 | `npm run db:init:local` | Crea tabla + datos en D1 local |
 | `npm test` | Unit tests |
-| `npm run test:coverage` | Tests + reporte de coverage (`coverage/index.html`) |
+| `npm run test:coverage` | Tests + coverage (`coverage/index.html`) + JUnit (`reports/junit-unit.xml`) |
+| `npm run test:uat` | UAT contra una URL desplegada (`UAT_BASE_URL=...`), JUnit en `reports/junit-uat.xml` |
 | `npm run lint` | ESLint |
 | `npm run build:prod` | Build para producción |
 | `npm run deploy` | Publica el ambiente de desarrollo |

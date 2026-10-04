@@ -9,6 +9,9 @@ export default defineConfig({
     globals: true,
     setupFiles: ["./tests/setup.ts"],
     include: ["tests/**/*.test.{ts,tsx}"],
+    // Reporte JUnit XML para publicar los resultados en el pipeline
+    reporters: ["default", "junit"],
+    outputFile: { junit: "./reports/junit-unit.xml" },
     coverage: {
       provider: "v8",
       reporter: ["text", "html", "lcov", "json-summary"],
