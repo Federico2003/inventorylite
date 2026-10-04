@@ -1,75 +1,36 @@
-# React + TypeScript + Vite
+# Inventory Lite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Control de inventario: React + TypeScript + Cloudflare Workers + D1, con tests (Vitest), coverage y pipeline de GitHub Actions.
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Estructura
 
 ```
-
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+src/                 Frontend React
+  components/        ProductList, ProductForm
+  services/          Llamadas a /api/products
+worker/index.ts      API (GET / POST /api/products) sobre D1
+schema.sql           Tabla products
+seed.sql             Datos de ejemplo
+tests/               Tests de componentes y de la API
+.github/workflows/   Pipeline build-test -> deploy-production
 ```
+
+## Ambientes
+
+| Ambiente | Worker | Base D1 |
+|---|---|---|
+| Desarrollo | `inventorylite` | `inventorylite-db` |
+| Producción | `inventorylite-prod` | `inventorylite-db-prod` |
+
+## Comandos
+
+| Comando | Qué hace |
+|---|---|
+| `npm run dev` | App local con D1 local |
+| `npm run db:init:local` | Crea tabla + datos en D1 local |
+| `npm test` | Unit tests |
+| `npm run test:coverage` | Tests + reporte de coverage (`coverage/index.html`) |
+| `npm run lint` | ESLint |
+| `npm run build:prod` | Build para producción |
+| `npm run deploy` | Publica el ambiente de desarrollo |
+| `npm run db:init:remote` / `db:init:prod` | Crea tabla + datos en D1 remota (dev / prod) |

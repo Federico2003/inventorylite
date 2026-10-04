@@ -13,7 +13,34 @@
 	"observability": {
 		"enabled": true
 	},
-	"upload_source_maps": true
+	"upload_source_maps": true,
+	/**
+	 * D1 de desarrollo (worker "inventorylite")
+	 * Reemplaza database_id con el que te da: npx wrangler d1 create inventorylite-db
+	 */
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "inventorylite-db",
+			"database_id": "fcd40c9d-aa08-487e-beee-556ea20dab2d"
+		}
+	],
+	/**
+	 * Ambiente de producción (worker "inventorylite-prod")
+	 * Reemplaza database_id con el que te da: npx wrangler d1 create inventorylite-db-prod
+	 */
+	"env": {
+		"production": {
+			"name": "inventorylite-prod",
+			"d1_databases": [
+				{
+					"binding": "DB",
+					"database_name": "inventorylite-db-prod",
+					"database_id": "3e54bdcd-7d01-4eb0-ba56-a21056d4b7ae"
+				}
+			]
+		}
+	}
 	/**
 	 * Smart Placement
 	 * https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
