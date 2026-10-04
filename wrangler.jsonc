@@ -22,7 +22,7 @@
 		{
 			"binding": "DB",
 			"database_name": "inventorylite-db",
-			"database_id": "fcd40c9d-aa08-487e-beee-556ea20dab2d"
+			"database_id": "8660b8c3-abeb-4fa1-b7b5-4f7642024d40"
 		}
 	],
 	/**
@@ -36,7 +36,7 @@
 				{
 					"binding": "DB",
 					"database_name": "inventorylite-db-prod",
-					"database_id": "3e54bdcd-7d01-4eb0-ba56-a21056d4b7ae"
+					"database_id": "581f7090-fb6c-4346-97d5-26b105663b97"
 				}
 			]
 		}
